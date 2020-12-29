@@ -1,14 +1,14 @@
 apiVersion: v1
 entries:
   metrics-server-helm:
-  - apiVersion: v2
-    appVersion: v0.3.7
-    created: "2020-12-29T13:32:03.060293899+01:00"
-    description: A Helm chart for metrics-server installation
-    digest: 19b6cfb876f70af2b63f9bebb1e985367b5a8c7d324e5c185ec89cae1e2638ac
-    name: metrics-server-helm
-    type: application
-    urls:
-    - metrics-server-helm.tgz
-    version: 0.1.0
+    - apiVersion: v2
+      appVersion: v0.3.7
+      created: "2020-12-29T13:32:03.060293899+01:00"
+      description: A Helm chart for metrics-server installation
+      digest: 19b6cfb876f70af2b63f9bebb1e985367b5a8c7d324e5c185ec89cae1e2638ac
+      name: metrics-server-helm
+      type: application
+      urls:
+        - https://mrostanski.github.io/metrics-server-helm/metrics-server-helm.tgz
+      version: 0.1.0
 generated: "2020-12-29T13:32:03.058742323+01:00"
