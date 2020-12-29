@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "metrics-server-helm.fullname" . }}
+  namespace: kube-system
+  labels:
+    {{- include "metrics-server-helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "metrics-server-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "metrics-server-helm.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "metrics-server-helm.serviceAccountName" . }}
+      volumes:
+      - name: tmp-dir
+        emptyDir: {}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --cert-dir=/tmp
+            - --secure-port=4443
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
+          ports:
+            - name: main-port
+              containerPort: 4443
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 4443
+              scheme: HTTPS
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4443
+              scheme: HTTPS
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

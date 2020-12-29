@@ -1,0 +1,1 @@
+Metrics server installed as {{ include "metrics-server-helm.fullname" . }}. Happy Helming!
